@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2nth.ai x The Bateleurs — Funder Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bat-red: #C41E2A;
+  --bat-black: #1A1A1A;
+  --bat-white: #FFFFFF;
+  --nth-blue: #2563EB;
+  --nth-indigo: #4F46E5;
+  --bg-gray: #F3F4F6;
+  --card-border: #E5E7EB;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --green: #059669;
+  --amber: #D97706;
+  --rose: #E11D48;
+  --purple: #7C3AED;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-gray);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* ============ NAV ============ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bat-black);
+  height: 56px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo-text { font-size: 22px; font-weight: 800; color: white; }
+.nav-logo-text span.nth { color: var(--nth-blue); }
+.nav-logo-text span.ai { color: var(--nth-indigo); }
+.nav-tagline { color: #9CA3AF; font-size: 12px; }
+.nav-links { display: flex; gap: 4px; }
+.nav-links a {
+  color: #D1D5DB; text-decoration: none; font-size: 13px; font-weight: 500;
+  padding: 8px 14px; border-radius: 6px; transition: all 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: white; background: rgba(255,255,255,0.1); }
+.nav-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px; padding: 4px 14px 4px 8px;
+  font-size: 11px; color: #D1D5DB; font-weight: 500;
+}
+.nav-badge svg { width: 20px; height: 20px; fill: var(--bat-red); }
+
+.mobile-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+
+/* ============ HEADER ============ */
+header {
+  margin-top: 56px;
+  background: linear-gradient(135deg, var(--bat-black) 0%, #2D2D2D 60%, #3a1a1d 100%);
+  padding: 40px 24px 36px;
+}
+.header-content {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
+}
+.header-left h1 { color: white; font-size: 26px; font-weight: 800; }
+.header-left h1 span { color: var(--bat-red); }
+.header-left p { color: #9CA3AF; font-size: 14px; margin-top: 4px; }
+.header-left .pbo { color: #6B7280; font-size: 11px; margin-top: 8px; font-weight: 500; letter-spacing: 0.5px; }
+.header-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat-card {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 16px 20px; text-align: center; min-width: 120px;
+  backdrop-filter: blur(8px);
+}
+.stat-card .stat-num { color: white; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stat-card .stat-num.red { color: var(--bat-red); }
+.stat-card .stat-label { color: #9CA3AF; font-size: 11px; font-weight: 500; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ============ MAIN LAYOUT ============ */
+.main-container {
+  max-width: 1400px; margin: 0 auto; padding: 24px;
+  display: grid; grid-template-columns: 280px 1fr; gap: 24px;
+}
+
+/* ============ SIDEBAR ============ */
+aside {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.filter-panel, .insights-panel {
+  background: white; border-radius: 12px; border: 1px solid var(--card-border);
+  padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.panel-title {
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.panel-title .icon { font-size: 16px; }
+.filter-group { margin-bottom: 16px; }
+.filter-group:last-child { margin-bottom: 0; }
+.filter-label { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block; }
+.filter-search {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 8px;
+  font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+.filter-search:focus { border-color: var(--nth-blue); }
+.checkbox-group { display: flex; flex-direction: column; gap: 6px; }
+.checkbox-item {
+  display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-primary); cursor: pointer;
+}
+.checkbox-item input[type="checkbox"] {
+  width: 16px; height: 16px; accent-color: var(--nth-blue); cursor: pointer;
+}
+.range-slider { width: 100%; accent-color: var(--nth-blue); cursor: pointer; }
+.range-value { font-size: 12px; color: var(--nth-blue); font-weight: 600; margin-top: 4px; }
+.btn-reset {
+  width: 100%; padding: 8px; background: none; border: 1px solid var(--card-border);
+  border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.btn-reset:hover { border-color: var(--bat-red); color: var(--bat-red); }
+
+/* Insights */
+.insights-panel .panel-title { color: var(--nth-indigo); }
+.insight-card {
+  padding: 12px; border-radius: 8px; margin-bottom: 10px;
+  border-left: 4px solid; background: #FAFAFA; font-size: 12px; line-height: 1.5;
+  color: var(--text-primary); transition: background 0.2s; cursor: default;
+}
+.insight-card:last-child { margin-bottom: 0; }
+.insight-card:hover { background: #F0F0F0; }
+.insight-card.urgent { border-left-color: var(--bat-red); }
+.insight-card.timely { border-left-color: var(--amber); }
+.insight-card.opportunity { border-left-color: var(--nth-blue); }
+.insight-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px; margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.insight-card.urgent .insight-tag { background: #FEE2E2; color: var(--bat-red); }
+.insight-card.timely .insight-tag { background: #FEF3C7; color: var(--amber); }
+.insight-card.opportunity .insight-tag { background: #DBEAFE; color: var(--nth-blue); }
+
+/* ============ MAIN CONTENT ============ */
+.content-area { display: flex; flex-direction: column; gap: 24px; }
+
+/* Sub-header */
+.content-header {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  background: white; border-radius: 12px; border: 1px solid var(--card-border);
+  padding: 14px 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.content-title { font-size: 18px; font-weight: 700; }
+.content-title span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+.content-controls { display: flex; align-items: center; gap: 12px; }
+.sort-select {
+  padding: 6px 12px; border: 1px solid var(--card-border); border-radius: 8px;
+  font-size: 13px; font-family: inherit; outline: none; cursor: pointer;
+  background: white;
+}
+
+/* Funder Cards Grid */
+.funder-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+.funder-card {
+  background: white; border-radius: 12px; border: 1px solid var(--card-border);
+  padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;
+}
+.funder-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: var(--nth-blue); transform: translateY(-2px); }
+.funder-card.hidden { display: none; }
+
+.card-top { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+.match-circle {
+  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: white; flex-shrink: 0; position: relative;
+}
+.match-circle.high { background: conic-gradient(var(--green) calc(var(--score) * 1%), #E5E7EB 0); }
+.match-circle.mid { background: conic-gradient(var(--amber) calc(var(--score) * 1%), #E5E7EB 0); }
+.match-circle.low { background: conic-gradient(#9CA3AF calc(var(--score) * 1%), #E5E7EB 0); }
+.match-circle::after {
+  content: attr(data-score); position: absolute; width: 38px; height: 38px;
+  background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: var(--text-primary);
+}
+
+.card-info { flex: 1; min-width: 0; }
+.card-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 8px;
+  border-radius: 6px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.tag.corporate { background: #DBEAFE; color: var(--nth-blue); }
+.tag.foundation { background: #EDE9FE; color: var(--purple); }
+.tag.government { background: #D1FAE5; color: var(--green); }
+.tag.grant { background: #FEF3C7; color: var(--amber); }
+.tag.private { background: #FCE7F3; color: var(--rose); }
+.tag.multilateral { background: #E0E7FF; color: #4338CA; }
+
+.card-reasoning {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  margin-bottom: 14px; font-style: italic; padding-left: 12px;
+  border-left: 2px solid var(--nth-indigo); display: -webkit-box;
+  -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-reasoning::before { content: "AI: "; font-weight: 700; color: var(--nth-indigo); font-style: normal; }
+
+.card-meta { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+.meta-item { font-size: 12px; }
+.meta-item .meta-label { color: var(--text-secondary); font-weight: 500; }
+.meta-item .meta-value { color: var(--text-primary); font-weight: 700; }
+
+.card-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.status-badge.new { background: #DBEAFE; color: var(--nth-blue); }
+.status-badge.contacted { background: #FEF3C7; color: var(--amber); }
+.status-badge.in_discussion { background: #FFEDD5; color: #EA580C; }
+.status-badge.committed { background: #D1FAE5; color: var(--green); }
+.status-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-badge:hover { filter: brightness(0.95); }
+
+.status-dropdown {
+  display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
+  background: white; border: 1px solid var(--card-border); border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 50; overflow: hidden; min-width: 150px;
+}
+.status-dropdown.open { display: block; }
+.status-option {
+  padding: 8px 12px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: background 0.15s;
+}
+.status-option:hover { background: var(--bg-gray); }
+
+.card-actions { display: flex; gap: 6px; }
+.btn {
+  padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: inherit; border: none;
+}
+.btn-outline { background: white; border: 1px solid var(--card-border); color: var(--nth-blue); }
+.btn-outline:hover { border-color: var(--nth-blue); background: #EFF6FF; }
+.btn-primary { background: var(--nth-indigo); color: white; }
+.btn-primary:hover { background: #4338CA; }
+
+/* Deadline badge */
+.deadline-badge { font-size: 11px; color: var(--bat-red); font-weight: 600; margin-top: 4px; }
+
+/* ============ EXPANDED CARD ============ */
+.card-expanded {
+  grid-column: 1 / -1; border-color: var(--nth-blue);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+}
+.card-expanded .card-reasoning {
+  -webkit-line-clamp: unset; overflow: visible;
+}
+.expanded-details { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
+.alignment-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.align-row { display: flex; align-items: center; gap: 10px; }
+.align-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); width: 130px; flex-shrink: 0; }
+.align-bar-bg { flex: 1; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden; }
+.align-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.align-bar-fill.high { background: var(--green); }
+.align-bar-fill.mid { background: var(--amber); }
+.align-value { font-size: 12px; font-weight: 700; width: 35px; text-align: right; }
+
+.suggested-approach { margin-top: 16px; }
+.suggested-approach h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--nth-indigo); }
+.suggested-approach p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.relevant-cases { margin-top: 12px; }
+.relevant-cases h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--nth-indigo); }
+.case-tag { display: inline-block; font-size: 11px; background: #FEE2E2; color: var(--bat-red); padding: 4px 10px; border-radius: 6px; margin: 2px 4px 2px 0; font-weight: 600; }
+
+/* ============ PIPELINE ============ */
+.pipeline-section {
+  background: white; border-radius: 12px; border: 1px solid var(--card-border);
+  padding: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.pipeline-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.pipeline-funnel { display: flex; flex-direction: column; gap: 10px; }
+.funnel-row { display: flex; align-items: center; gap: 14px; }
+.funnel-label { font-size: 13px; font-weight: 600; width: 130px; flex-shrink: 0; color: var(--text-primary); }
+.funnel-count { font-size: 13px; font-weight: 800; width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+.funnel-bar-bg { flex: 1; height: 28px; background: #F3F4F6; border-radius: 8px; overflow: hidden; }
+.funnel-bar-fill {
+  height: 100%; border-radius: 8px; transition: width 0.6s ease;
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 10px;
+  font-size: 11px; font-weight: 600; color: white;
+}
+.funnel-bar-fill.stage-0 { background: linear-gradient(90deg, #93C5FD, var(--nth-blue)); }
+.funnel-bar-fill.stage-1 { background: linear-gradient(90deg, #818CF8, var(--nth-indigo)); }
+.funnel-bar-fill.stage-2 { background: linear-gradient(90deg, #FCD34D, var(--amber)); }
+.funnel-bar-fill.stage-3 { background: linear-gradient(90deg, #FB923C, #EA580C); }
+.funnel-bar-fill.stage-4 { background: linear-gradient(90deg, #6EE7B7, var(--green)); }
+
+.pipeline-metrics {
+  display: flex; gap: 24px; margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--card-border); flex-wrap: wrap;
+}
+.pipeline-metric { font-size: 13px; }
+.pipeline-metric .pm-label { color: var(--text-secondary); font-weight: 500; }
+.pipeline-metric .pm-value { color: var(--text-primary); font-weight: 700; }
+
+/* ============ MODAL ============ */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center;
+  backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.2s;
+}
+.modal-overlay.open { display: flex; opacity: 1; }
+.modal {
+  background: white; border-radius: 16px; width: 90%; max-width: 700px;
+  max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: modalSlide 0.3s ease;
+}
+@keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-header {
+  padding: 20px 24px; border-bottom: 1px solid var(--card-border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-header h2 { font-size: 18px; font-weight: 700; }
+.modal-header h2 .ai-badge {
+  display: inline-block; background: var(--nth-indigo); color: white;
+  font-size: 10px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 8px;
+  font-weight: 700; letter-spacing: 0.5px;
+}
+.modal-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 8px; border: none;
+  background: var(--bg-gray); cursor: pointer; font-size: 18px; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.modal-close:hover { background: #E5E7EB; color: var(--text-primary); }
+
+.modal-tabs { display: flex; border-bottom: 1px solid var(--card-border); padding: 0 24px; }
+.modal-tab {
+  padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+  background: none; border-top: none; border-left: none; border-right: none; font-family: inherit;
+}
+.modal-tab.active { color: var(--nth-indigo); border-bottom-color: var(--nth-indigo); }
+.modal-tab:hover { color: var(--text-primary); }
+
+.modal-body { padding: 24px; }
+.modal-tab-content { display: none; }
+.modal-tab-content.active { display: block; }
+
+.generating {
+  display: flex; align-items: center; gap: 8px; padding: 20px;
+  font-size: 14px; color: var(--nth-indigo); font-weight: 500;
+}
+.generating-dots span {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--nth-indigo); animation: dotPulse 1.4s infinite;
+  margin-right: 3px;
+}
+.generating-dots span:nth-child(2) { animation-delay: 0.2s; }
+.generating-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotPulse { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+.pitch-content {
+  font-size: 13px; line-height: 1.8; color: var(--text-primary);
+  white-space: pre-wrap; font-family: inherit;
+}
+.pitch-content .subject { font-weight: 700; color: var(--nth-indigo); margin-bottom: 12px; }
+
+.modal-actions {
+  padding: 16px 24px; border-top: 1px solid var(--card-border);
+  display: flex; gap: 10px; justify-content: flex-end;
+}
+.btn-copy { background: var(--nth-blue); color: white; padding: 8px 20px; font-size: 13px; }
+.btn-copy:hover { background: #1D4ED8; }
+.btn-copy.copied { background: var(--green); }
+
+/* ============ FOOTER ============ */
+footer {
+  max-width: 1400px; margin: 0 auto; padding: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-secondary); border-top: 1px solid var(--card-border);
+  margin-top: 12px;
+}
+footer a { color: var(--nth-blue); text-decoration: none; }
+footer .powered { display: flex; align-items: center; gap: 6px; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .funder-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .main-container { grid-template-columns: 1fr; }
+  aside { display: none; }
+  aside.sidebar-open { display: flex; position: fixed; top: 56px; left: 0; bottom: 0; width: 300px; z-index: 90; background: white; overflow-y: auto; padding: 20px; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+  .mobile-toggle { display: block; }
+  .nav-links { display: none; }
+  .nav-badge { display: none; }
+  .header-content { flex-direction: column; align-items: flex-start; }
+  .header-stats { width: 100%; }
+  .stat-card { flex: 1; min-width: 80px; padding: 12px; }
+  .stat-card .stat-num { font-size: 20px; }
+  .content-header { flex-direction: column; align-items: flex-start; }
+  .card-meta { flex-direction: column; gap: 6px; }
+  .pipeline-metrics { flex-direction: column; gap: 8px; }
+  footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
+    <div>
+      <div class="nav-logo-text"><span class="nth">2nth</span><span class="ai">.ai</span></div>
+      <div class="nav-tagline">AI-Powered Funder Intelligence</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#dashboard" class="active">Dashboard</a>
+    <a href="#matching">Matching</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#insights-anchor">Insights</a>
+  </div>
+  <div class="nav-badge">
+    <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0011.5 2 1.5 1.5 0 0010 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+    2nth.ai &times; The Bateleurs
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header id="dashboard">
+  <div class="header-content">
+    <div class="header-left">
+      <h1>The <span>Bateleurs</span> — Funder Intelligence Dashboard</h1>
+      <p>AI-powered funder discovery for South Africa's Environmental Air Force</p>
+      <div class="pbo">SA NPC &bull; PBO REFERENCE NO. 930009099 &bull; SECTION 18A TAX DEDUCTIBLE</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-card">
+        <div class="stat-num">1,000+</div>
+        <div class="stat-label">Missions Flown</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num red">R70M+</div>
+        <div class="stat-label">Conservation Impact</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">150+</div>
+        <div class="stat-label">Partner Orgs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4:1</div>
+        <div class="stat-label">Multiplier Effect</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-container">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="filter-panel">
+      <div class="panel-title"><span class="icon">&#9881;</span> Filters</div>
+
+      <div class="filter-group">
+        <label class="filter-label">Search</label>
+        <input type="text" class="filter-search" id="searchInput" placeholder="Search funders..." oninput="applyFilters()">
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Funder Type</label>
+        <div class="checkbox-group" id="typeFilters">
+          <label class="checkbox-item"><input type="checkbox" value="Corporate CSI" onchange="applyFilters()"> Corporate CSI</label>
+          <label class="checkbox-item"><input type="checkbox" value="Foundation" onchange="applyFilters()"> Foundation</label>
+          <label class="checkbox-item"><input type="checkbox" value="Government" onchange="applyFilters()"> Government</label>
+          <label class="checkbox-item"><input type="checkbox" value="International Grant" onchange="applyFilters()"> International Grant</label>
+          <label class="checkbox-item"><input type="checkbox" value="Private / Eco-Tourism" onchange="applyFilters()"> Private / Eco-Tourism</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Min Match Score</label>
+        <input type="range" class="range-slider" id="scoreSlider" min="0" max="100" value="50" oninput="updateScoreLabel(); applyFilters()">
+        <div class="range-value" id="scoreLabel">50%</div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Sector</label>
+        <div class="checkbox-group" id="sectorFilters">
+          <label class="checkbox-item"><input type="checkbox" value="Mining & Resources" onchange="applyFilters()"> Mining & Resources</label>
+          <label class="checkbox-item"><input type="checkbox" value="Aviation & Fuel" onchange="applyFilters()"> Aviation & Fuel</label>
+          <label class="checkbox-item"><input type="checkbox" value="Financial Services" onchange="applyFilters()"> Financial Services</label>
+          <label class="checkbox-item"><input type="checkbox" value="Insurance" onchange="applyFilters()"> Insurance</label>
+          <label class="checkbox-item"><input type="checkbox" value="Conservation" onchange="applyFilters()"> Conservation</label>
+          <label class="checkbox-item"><input type="checkbox" value="Eco-Tourism" onchange="applyFilters()"> Eco-Tourism</label>
+          <label class="checkbox-item"><input type="checkbox" value="Telecommunications" onchange="applyFilters()"> Telecommunications</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Status</label>
+        <div class="checkbox-group" id="statusFilters">
+          <label class="checkbox-item"><input type="checkbox" value="new" onchange="applyFilters()"> New</label>
+          <label class="checkbox-item"><input type="checkbox" value="contacted" onchange="applyFilters()"> Contacted</label>
+          <label class="checkbox-item"><input type="checkbox" value="in_discussion" onchange="applyFilters()"> In Discussion</label>
+          <label class="checkbox-item"><input type="checkbox" value="committed" onchange="applyFilters()"> Committed</label>
+        </div>
+      </div>
+
+      <button class="btn-reset" onclick="resetFilters()">Reset All Filters</button>
+    </div>
+
+    <div class="insights-panel" id="insights-anchor">
+      <div class="panel-title"><span class="icon">&#10024;</span> AI Strategic Insights</div>
+      <div id="insightsContainer"></div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <div class="content-header" id="matching">
+      <div class="content-title">AI-Matched Funders <span id="resultCount"></span></div>
+      <div class="content-controls">
+        <select class="sort-select" id="sortSelect" onchange="applySort()">
+          <option value="matchScore">Sort by: Match Score</option>
+          <option value="fundingMax">Sort by: Funding Potential</option>
+          <option value="deadline">Sort by: Deadline</option>
+          <option value="status">Sort by: Status</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="funder-grid" id="funderGrid"></div>
+
+    <!-- Pipeline -->
+    <div class="pipeline-section" id="pipeline">
+      <h2>Pipeline Overview</h2>
+      <div class="pipeline-funnel" id="pipelineFunnel"></div>
+      <div class="pipeline-metrics" id="pipelineMetrics"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalTitle">AI Pitch Generator <span class="ai-badge">AI</span></h2>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="email" onclick="switchTab('email')">Email Pitch</button>
+      <button class="modal-tab" data-tab="proposal" onclick="switchTab('proposal')">Proposal Summary</button>
+      <button class="modal-tab" data-tab="impact" onclick="switchTab('impact')">Impact Data</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tab-content active" id="tab-email"></div>
+      <div class="modal-tab-content" id="tab-proposal"></div>
+      <div class="modal-tab-content" id="tab-impact"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+      <button class="btn btn-copy" id="copyBtn" onclick="copyPitch()">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="powered"><span class="nav-logo-text" style="font-size:14px"><span class="nth">2nth</span><span class="ai">.ai</span></span> — AI-Powered NPO Intelligence Platform</div>
+  <div><a href="https://www.bateleurs.co.za" target="_blank">bateleurs.co.za</a> &bull; South Africa's Environmental Air Force</div>
+</footer>
+
+<script>
+// ============ DATA ============
+const FUNDERS = [
+  {
+    id: 1, name: "Anglo American", type: "Corporate CSI", sector: ["Mining & Resources"],
+    matchScore: 94,
+    aiReasoning: "Mining sector with rehabilitation obligations directly aligns with your founding mission — the Richards Bay Minerals dune devastation documentation that led to Lake St. Lucia's World Heritage designation. Anglo American's dedicated Biodiversity Grant program specifically funds monitoring of mining impact on ecosystems.",
+    fundingMin: 200000, fundingMax: 500000, geoFocus: "South Africa",
+    status: "new", deadline: "2026-05-21",
+    csiProgram: "Anglo American Biodiversity Grant",
+    relevantCases: ["Richards Bay Minerals", "Mining Environmental Destruction"],
+    pitchAngle: "Aerial rehabilitation monitoring partnership",
+    approach: "Apply via their annual Biodiversity Grant cycle. Lead with your 25+ years of aerial mining impact documentation — you literally have the longest-running independent aerial archive of SA mining destruction. Position as an independent monitoring partner for their ESG reporting requirements.",
+    alignment: { mission: 95, sector: 98, geo: 90, funding: 85, relationship: 60 },
+    emailPitch: `Subject: Aerial Documentation Partnership — Mining Rehabilitation Monitoring
+
+Dear Anglo American Biodiversity Grant Committee,
+
+The Bateleurs, South Africa's volunteer Environmental Air Force, has documented mining environmental impact from the air since our founding mission at Richards Bay in 1998. Our aerial photography of dune devastation was instrumental in Lake St. Lucia's World Heritage Site designation.
+
+With 200+ volunteer pilots and 1,000+ missions completed across 10 countries, we offer a unique capability: independent aerial monitoring of mining rehabilitation compliance at a fraction of commercial rates — our 4:1 multiplier effect means every R1 of your grant generates R4 in conservation value.
+
+We propose a 12-month aerial documentation program covering priority mining rehabilitation sites, producing quarterly visual reports suitable for your ESG and biodiversity reporting requirements.
+
+Key credentials:
+• 28 years of conservation aviation operations
+• R70 million+ in conservation value delivered
+• 150+ beneficiary organisations supported
+• Section 18A tax-deductible (PBO Ref: 930009099)
+
+We welcome the opportunity to discuss how our volunteer pilots can support Anglo American's biodiversity commitments from the air.
+
+Warm regards,
+Steve McCurrach
+General Manager, The Bateleurs
++27 82 891 1689 | steve@bateleurs.org`,
+    proposalSummary: `PROPOSAL: Aerial Mining Rehabilitation Monitoring Program
+
+OBJECTIVE: Provide independent aerial documentation and monitoring of mining rehabilitation sites across South Africa, supporting Anglo American's ESG reporting and biodiversity commitments.
+
+SCOPE:
+• Quarterly aerial surveys of 5-8 priority rehabilitation sites
+• High-resolution aerial photography and time-lapse documentation
+• Independent environmental assessment reports with visual evidence
+• Integration with Anglo American's biodiversity reporting framework
+
+BUDGET REQUEST: R350,000 (12 months)
+VALUE DELIVERED: R1.4M+ (4:1 multiplier via volunteer pilot contributions)
+
+TIMELINE: 12 months with quarterly deliverables
+TRACK RECORD: 1,000+ missions, 28 years, 150+ conservation partners`,
+    impactData: `RELEVANT IMPACT DATA FOR ANGLO AMERICAN:
+
+CASE STUDY: Richards Bay Minerals (1998-present)
+• Aerial documentation of dune devastation from titanium mining
+• Photography was instrumental in Lake St. Lucia's UNESCO World Heritage designation
+• Ongoing monitoring of coastal erosion and rehabilitation efforts
+
+CASE STUDY: Mining Environmental Destruction
+• Aerial surveys exposing un-rehabilitated mines across SA
+• Media coverage generated from aerial evidence drove regulatory attention
+• Time-series photography documenting environmental degradation
+
+STATISTICS:
+• 1,000+ conservation missions completed
+• 10 countries covered across southern Africa
+• R70 million+ in conservation value delivered
+• 4:1 return on investment (volunteer pilot model)`
+  },
+  {
+    id: 2, name: "Rand Merchant Bank", type: "Corporate CSI", sector: ["Financial Services"],
+    matchScore: 91,
+    aiReasoning: "Existing WWF SA corporate donor with established conservation CSI pipeline. RMB's partnership with WWF on sustainable development creates a warm referral path through your existing WWF beneficiary relationship. Your 4:1 multiplier effect aligns with their ROI-focused investment culture.",
+    fundingMin: 150000, fundingMax: 400000, geoFocus: "South Africa",
+    status: "contacted", deadline: null,
+    csiProgram: "RMB Fund / CSI Programme",
+    relevantCases: ["Gorongosa Wild Dogs", "Rewilding"],
+    pitchAngle: "Conservation ROI — the multiplier effect",
+    approach: "Leverage your existing WWF relationship for a warm introduction. Frame this as an investment with measurable ROI — RMB's culture responds to quantifiable returns. Lead with the 4:1 multiplier effect as your core differentiator from other conservation funding requests.",
+    alignment: { mission: 85, sector: 80, geo: 95, funding: 90, relationship: 75 },
+    emailPitch: `Subject: Conservation Investment with 4:1 Return — The Bateleurs Partnership
+
+Dear RMB CSI Team,
+
+As a valued WWF South Africa corporate partner, you understand the importance of strategic conservation investment. We'd like to introduce a unique opportunity that aligns with RMB's commitment to measurable impact.
+
+The Bateleurs operates South Africa's only volunteer Environmental Air Force — 200+ pilots who donate their time and aircraft for conservation missions. This creates what we call The Multiplier Effect: every R1 donated to The Bateleurs generates R4 in conservation value, because our pilots absorb 75% of mission costs.
+
+Over 28 years, this model has delivered R70 million+ in conservation impact — from rhino dehorning support to rewilding projects that have reintroduced wildlife to areas where they haven't been seen in 100+ years.
+
+Your WWF SA partnership gives you direct insight into the conservation organisations we serve — many are WWF partners themselves. A Bateleurs partnership amplifies your existing conservation investment across the entire ecosystem.
+
+We'd welcome 30 minutes to present our impact data and discuss partnership possibilities.
+
+Warm regards,
+Steve McCurrach
+General Manager, The Bateleurs`,
+    proposalSummary: `PROPOSAL: Strategic Conservation Partnership — Multiplier Effect Program
+
+OBJECTIVE: Partner with RMB to fund aerial conservation missions, leveraging the 4:1 multiplier effect for maximum conservation ROI.
+
+VALUE PROPOSITION: R1 invested = R4 in conservation impact
+BUDGET REQUEST: R250,000 annual CSI partnership
+IMPACT DELIVERED: R1M+ in aerial conservation support
+
+KEY DELIVERABLES:
+• 40+ conservation missions funded annually
+• Quarterly impact reports with aerial photography
+• RMB branding on mission communications
+• Annual CSI report contribution with visual content`,
+    impactData: `RELEVANT IMPACT DATA FOR RMB:
+
+THE MULTIPLIER EFFECT:
+• R1 donated = R4 conservation value
+• Pilots donate 75% of mission costs (time + aircraft operations)
+• The Bateleurs covers only fuel (25%)
+• Total lifetime impact: R70M+ into conservation
+
+CONSERVATION NETWORK REACH:
+• 150+ beneficiary conservation organisations
+• Including WWF SA, Endangered Wildlife Trust, SANParks
+• Support ONE. Support MANY. — single investment cascades across ecosystem
+
+FINANCIAL CREDENTIALS:
+• Section 18A tax-deductible donations
+• Registered NPC (PBO Ref: 930009099)
+• Audited annual financial statements
+• Lean operations — 2 staff, 200+ volunteers`
+  },
+  {
+    id: 3, name: "Sasol", type: "Corporate CSI", sector: ["Aviation & Fuel"],
+    matchScore: 89,
+    aiReasoning: "As SA's largest fuel producer, Sasol's CSI program targets environmental stewardship. Direct brand alignment — your pilots consume aviation fuel, creating a natural 'Fuel for Conservation' sponsorship narrative. ESG pressure on fossil fuel companies increases conservation partnership appetite.",
+    fundingMin: 250000, fundingMax: 600000, geoFocus: "South Africa",
+    status: "new", deadline: null,
+    csiProgram: "Sasol CSI / Environmental Stewardship",
+    relevantCases: ["Wattled Crane Recovery", "Wetlands Research"],
+    pitchAngle: "'Fuel for Conservation' — aviation fuel sponsorship",
+    approach: "Propose a direct fuel sponsorship program — 'Every litre fuels conservation.' This is a powerful narrative for Sasol's ESG positioning: their product literally powers environmental protection. Suggest branding on fuel drums at airfields. Quantify the litres consumed across 1000+ missions.",
+    alignment: { mission: 90, sector: 95, geo: 90, funding: 85, relationship: 40 },
+    emailPitch: `Subject: Fuel for Conservation — Natural Partnership Between Sasol and The Bateleurs
+
+Dear Sasol CSI Team,
+
+What if every litre of aviation fuel could power conservation?
+
+The Bateleurs operates 200+ volunteer aircraft on conservation missions across southern Africa. Our pilots need one thing to fly: fuel. This creates the most natural brand alignment in conservation — Sasol's core product directly enables environmental protection.
+
+We propose a "Fuel for Conservation" partnership where Sasol sponsors the aviation fuel for our conservation fleet. This is uniquely powerful ESG positioning: South Africa's largest energy company literally fuelling the country's Environmental Air Force.
+
+Impact potential:
+• Brand presence across 200+ aircraft and 1,000+ missions
+• Aerial photography and video content featuring Sasol-fuelled conservation
+• Direct, tangible link between product and environmental impact
+• Section 18A tax deduction on all fuel sponsorship
+
+Our volunteer pilots donate their time and aircraft — they only need fuel. Your investment goes 100% to conservation action.
+
+Warm regards,
+Steve McCurrach
+General Manager, The Bateleurs`,
+    proposalSummary: `PROPOSAL: "Fuel for Conservation" — Sasol x Bateleurs Partnership
+
+CONCEPT: Sasol sponsors aviation fuel for The Bateleurs' conservation fleet, creating a direct product-to-impact ESG narrative.
+
+BUDGET: R400,000 annual fuel sponsorship
+MISSIONS ENABLED: 80+ conservation flights
+IMPACT VALUE: R1.6M+ (4:1 multiplier)
+
+BRAND BENEFITS:
+• "Powered by Sasol" on mission communications
+• Aerial content library for Sasol ESG reporting
+• Media coverage of fuel-to-conservation narrative
+• 200+ brand ambassadors (volunteer pilots)`,
+    impactData: `FUEL & FLIGHT STATISTICS:
+
+MISSION VOLUME:
+• 1,000+ missions completed since 1998
+• Missions across 10 countries in southern Africa
+• Fixed-wing and ultralight aircraft fleet
+
+FUEL CONSUMPTION PROFILE:
+• Fuel is the single largest operational cost
+• Represents 25% of total mission cost (pilots absorb 75%)
+• Direct, measurable link between litres consumed and conservation achieved
+
+ENVIRONMENTAL IMPACT OF MISSIONS:
+• Anti-poaching surveillance for rhino protection
+• Wattled Crane saved from extinction via aerial tracking
+• Wetlands research fly-overs detecting farmland encroachment
+• Mining environmental destruction documentation`
+  },
+  {
+    id: 4, name: "IUCN Save Our Species", type: "International Grant", sector: ["Conservation"],
+    matchScore: 88,
+    aiReasoning: "Your wattled crane recovery program and rhino dehorning aerial support directly qualify for the Threatened Species Grant track. IUCN-SOS already funds SANParks black rhino monitoring — your aerial capability complements existing grantee operations across southern Africa.",
+    fundingMin: 100000, fundingMax: 300000, geoFocus: "Global",
+    status: "new", deadline: "2026-06-05",
+    csiProgram: "IUCN Save Our Species — Threatened Species Grant",
+    relevantCases: ["Wattled Crane Recovery", "Red Billed Oxpecker"],
+    pitchAngle: "Aerial support for threatened species monitoring",
+    approach: "Apply via the Threatened Species Grant track. Lead with the Wattled Crane case study — aerial survey was instrumental in saving this species from extinction in KZN. Include Red Billed Oxpecker relocation success (moved off the red list). Position as force multiplier for existing IUCN-funded ground operations.",
+    alignment: { mission: 95, sector: 90, geo: 85, funding: 75, relationship: 55 },
+    emailPitch: `Subject: Grant Application — Aerial Monitoring for Threatened Species Recovery in Southern Africa
+
+Dear IUCN Save Our Species Grant Committee,
+
+The Bateleurs requests consideration for the Threatened Species Grant to support aerial monitoring of endangered species recovery programs across southern Africa.
+
+Our proven track record includes:
+• Wattled Crane, KZN: Aerial surveys were instrumental in preventing extinction — population monitoring and tracking assistance enabled targeted conservation interventions
+• Red Billed Oxpecker: Aerial-supported relocation efforts successfully removed this species from the red list
+• Rhino dehorning operations: Aerial surveillance support for anti-poaching units
+
+With 200+ volunteer pilots and 28 years of operations, The Bateleurs provides aerial capability that complements ground-based conservation at no additional aircraft cost — our pilots donate their time and machines.
+
+We propose a 12-month program supporting aerial monitoring for 3-5 priority threatened species across SANParks and partner reserves.
+
+Budget request: R200,000
+Conservation value delivered: R800,000+ (4:1 volunteer multiplier)
+
+Warm regards,
+Steve McCurrach, General Manager`,
+    proposalSummary: `GRANT APPLICATION: Threatened Species Aerial Monitoring Program
+
+APPLICANT: The Bateleurs (SA NPC, PBO 930009099)
+GRANT TRACK: IUCN Save Our Species — Threatened Species
+AMOUNT REQUESTED: R200,000
+DURATION: 12 months
+
+SPECIES TARGETS:
+• Wattled Crane (KZN) — population monitoring
+• African Wild Dog — relocation support
+• Vulture species — nest monitoring and poisoning response
+• Rhino — dehorning operation aerial support
+
+METHODOLOGY: Volunteer pilot aerial surveys, photography, GPS tracking, wildlife transport`,
+    impactData: `THREATENED SPECIES IMPACT:
+
+WATTLED CRANE (KZN):
+• Status: Critically Endangered in South Africa
+• Bateleurs role: Aerial survey and tracking assistance
+• Outcome: Instrumental in preventing local extinction
+
+RED BILLED OXPECKER:
+• Bateleurs role: Aerial support for relocation program
+• Outcome: Species successfully removed from the red list
+
+AFRICAN WILD DOG (Gorongosa):
+• 30 years absent from the reserve
+• Bateleurs flew wild dogs from SA to Mozambique for repopulation
+• Cross-border wildlife transport across 10 countries
+
+VULTURES:
+• ~1,500 vultures lost since 2015 to poisoning
+• Bateleurs provide rapid aerial response for poisoning events`
+  },
+  {
+    id: 5, name: "Santam", type: "Corporate CSI", sector: ["Insurance"],
+    matchScore: 87,
+    aiReasoning: "SA's largest short-term insurer and existing WWF SA corporate donor. Environmental risk documentation aligns with insurance sector interest in climate and biodiversity data. Your aerial surveys of flood plains, wetlands, and coastal erosion provide risk-relevant environmental intelligence.",
+    fundingMin: 100000, fundingMax: 300000, geoFocus: "South Africa",
+    status: "in_discussion", deadline: null,
+    csiProgram: "Santam Resilient Investment / CSI",
+    relevantCases: ["Wetlands Research", "Richards Bay Minerals"],
+    pitchAngle: "Environmental risk intelligence from the air",
+    approach: "Position aerial surveys as environmental risk intelligence — insurers care about climate data, flood plain mapping, and coastal erosion. Your wetlands research and coastal monitoring directly feeds their risk models. Existing discussions should be accelerated with a data-sharing proposal.",
+    alignment: { mission: 80, sector: 85, geo: 95, funding: 85, relationship: 80 },
+    emailPitch: `Subject: Environmental Risk Intelligence Partnership — Aerial Survey Data
+
+Dear Santam CSI Team,
+
+Further to our ongoing discussions, The Bateleurs can provide unique environmental risk intelligence through our aerial survey network — data that directly supports Santam's climate resilience mandate.
+
+Our 200+ volunteer pilots regularly conduct:
+• Flood plain and wetlands aerial assessments
+• Coastal erosion monitoring and documentation
+• Environmental damage surveys (post-flood, post-fire)
+• Land-use change detection from the air
+
+This data, captured across 1,000+ missions over 28 years, provides a unique time-series perspective on South Africa's changing environmental risk landscape — directly relevant to Santam's underwriting and risk models.
+
+Partnership proposal: R200,000 annual support in exchange for prioritised aerial survey data and environmental intelligence reporting.
+
+Warm regards,
+Steve McCurrach`,
+    proposalSummary: `PROPOSAL: Environmental Risk Intelligence Partnership
+
+CONCEPT: The Bateleurs provides aerial environmental survey data relevant to Santam's risk assessment and climate resilience programs.
+
+BUDGET: R200,000 annual partnership
+DATA DELIVERABLES: Quarterly aerial survey reports covering wetlands, flood plains, coastal erosion, and environmental change indicators
+
+MUTUAL VALUE:
+• Santam receives unique aerial environmental risk data
+• The Bateleurs receives operational funding
+• Joint ESG reporting on climate resilience initiatives`,
+    impactData: `ENVIRONMENTAL MONITORING DATA:
+
+WETLANDS RESEARCH:
+• Aerial surveys detecting farmland and forestry encroachment on wetlands
+• Time-series documentation of wetland health across KZN and Eastern Cape
+• Data used by researchers and conservation partners
+
+COASTAL MONITORING:
+• Richards Bay Minerals — dune devastation documentation since 1998
+• Coastal erosion trends visible from aerial perspective
+• Post-storm damage assessment capability
+
+FLOOD PLAIN ASSESSMENT:
+• Aerial surveys of river systems including Umgeni (Africa's most polluted)
+• Land-use change detection supporting environmental compliance`
+  },
+  {
+    id: 6, name: "Critical Ecosystem Partnership Fund", type: "International Grant", sector: ["Conservation"],
+    matchScore: 86,
+    aiReasoning: "Active Maputaland-Pondoland-Albany biodiversity hotspot funding call. Your coastal survey missions and wetlands research fly-overs in this corridor make you an ideal applicant. CEPF specifically funds civil society organisations working in biodiversity hotspots.",
+    fundingMin: 150000, fundingMax: 400000, geoFocus: "Southern Africa",
+    status: "new", deadline: "2026-05-06",
+    csiProgram: "CEPF Maputaland-Pondoland-Albany Hotspot",
+    relevantCases: ["Wetlands Research", "Richards Bay Minerals"],
+    pitchAngle: "Aerial biodiversity hotspot monitoring",
+    approach: "Apply for the current MPA Hotspot funding round. Your Richards Bay and KZN coastal operations are within this exact hotspot corridor. Emphasise your role as a force multiplier for multiple conservation organisations operating in the hotspot — 'Support ONE. Support MANY.'",
+    alignment: { mission: 90, sector: 92, geo: 88, funding: 80, relationship: 45 },
+    emailPitch: `Subject: CEPF Grant Application — Aerial Monitoring of Maputaland-Pondoland-Albany Hotspot
+
+Dear CEPF Grants Team,
+
+The Bateleurs applies for funding under the Maputaland-Pondoland-Albany Biodiversity Hotspot program to provide aerial monitoring and survey support across this critical corridor.
+
+Our 28-year operational history in this region includes aerial documentation of Richards Bay mining impact, wetlands research along the KZN coast, and wildlife monitoring across the MPA corridor. We serve as an aerial platform for multiple conservation organisations working in this hotspot.
+
+Our volunteer model ensures maximum conservation value per grant dollar — R1 invested delivers R4 in aerial conservation support through our 200+ volunteer pilots.
+
+We request R250,000 over 18 months for systematic aerial surveys of priority biodiversity sites within the MPA corridor.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `CEPF GRANT APPLICATION
+
+HOTSPOT: Maputaland-Pondoland-Albany
+AMOUNT: R250,000 (18 months)
+FOCUS: Aerial monitoring of priority biodiversity sites
+
+ACTIVITIES:
+• Biannual aerial surveys of 10 priority sites
+• Threat detection (illegal land conversion, mining, development)
+• Support for partner organisations in the MPA corridor
+• Photographic evidence library for advocacy`,
+    impactData: `MPA HOTSPOT OPERATIONS:
+
+GEOGRAPHIC COVERAGE:
+• Richards Bay to Wild Coast corridor
+• 28 years of aerial operations in this region
+• Supporting CapeNature, Ezemvelo KZN Wildlife, and local conservation trusts
+
+KEY THREATS DOCUMENTED:
+• Dune mining at Richards Bay
+• Farmland and forestry encroachment on wetlands
+• Illegal land conversion and road building
+• Coastal development pressures`
+  },
+  {
+    id: 7, name: "WWF South Africa", type: "Foundation", sector: ["Conservation"],
+    matchScore: 85,
+    aiReasoning: "Existing beneficiary organisation with 20+ year relationship. WWF SA's corporate partners (RMB, Santam, Vodacom, Nedbank) represent secondary funding pathways. Your aerial support for WWF field projects should be formalised into a strategic funding partnership beyond ad-hoc mission support.",
+    fundingMin: 100000, fundingMax: 250000, geoFocus: "South Africa",
+    status: "committed", deadline: null,
+    csiProgram: "WWF SA Partnership Programme",
+    relevantCases: ["Wetlands Research", "Wattled Crane Recovery"],
+    pitchAngle: "Formalise existing relationship into strategic partnership",
+    approach: "Move from ad-hoc beneficiary relationship to a formalised strategic partnership with annual funding commitment. Use the existing relationship warmth. Key lever: WWF's corporate partners (RMB, Santam, Vodacom) are also Bateleurs targets — propose a coordinated approach.",
+    alignment: { mission: 95, sector: 95, geo: 90, funding: 70, relationship: 95 },
+    emailPitch: `Subject: Strategic Partnership Proposal — Formalising Our 20+ Year Collaboration
+
+Dear WWF SA Team,
+
+After more than two decades of supporting WWF SA projects with aerial survey and wildlife transport capabilities, The Bateleurs proposes formalising our relationship into a strategic partnership.
+
+Our volunteer pilots have supported numerous WWF SA initiatives — from wetlands research to species monitoring. We believe a structured annual partnership would benefit both organisations by ensuring aerial capability is available for WWF priorities while providing The Bateleurs with sustainable operational funding.
+
+Proposed partnership: R150,000 annual contribution for priority aerial support access, co-branded impact reporting, and coordinated outreach to your corporate partners (RMB, Santam, Vodacom) who may benefit from direct Bateleurs engagement.
+
+Warm regards,
+Steve McCurrach`,
+    proposalSummary: `PROPOSAL: Strategic Partnership — WWF SA x The Bateleurs
+
+CURRENT RELATIONSHIP: 20+ years as beneficiary organisation
+PROPOSED EVOLUTION: Formalised annual strategic partnership
+
+PARTNERSHIP VALUE: R150,000/year
+SERVICES: Priority aerial support for WWF SA projects, co-branded content, joint corporate outreach`,
+    impactData: `WWF RELATIONSHIP HISTORY:
+
+PARTNERSHIP DURATION: 20+ years
+MISSIONS SUPPORTED: Multiple WWF SA field projects
+COVERAGE: National aerial support network
+
+MUTUAL NETWORK VALUE:
+• WWF corporate partners: RMB, Santam, Vodacom, Nedbank
+• Each represents secondary funding pathway for The Bateleurs
+• "Support ONE. Support MANY." — funding cascades across 150+ orgs`
+  },
+  {
+    id: 8, name: "Nedbank", type: "Corporate CSI", sector: ["Financial Services"],
+    matchScore: 84,
+    aiReasoning: "Nedbank's Green Affinity Programme channels client contributions to conservation. Your existing WWF partnership creates a warm referral path. Nedbank also funds Wilderness Foundation Africa — cross-referral opportunity through your overlapping beneficiary network.",
+    fundingMin: 100000, fundingMax: 300000, geoFocus: "South Africa",
+    status: "new", deadline: null,
+    csiProgram: "Nedbank Green Affinity Programme / Green Trust",
+    relevantCases: ["Rewilding", "Gorongosa Wild Dogs"],
+    pitchAngle: "Green banking meets green flying",
+    approach: "Approach via two channels: Green Affinity Programme (client contributions to conservation) and Nedbank Private Wealth (CSI for HNWI clients). Use the Wilderness Foundation Africa connection as a referral pathway. Position as the 'green banking meets green flying' narrative.",
+    alignment: { mission: 85, sector: 80, geo: 90, funding: 85, relationship: 50 },
+    emailPitch: `Subject: Partnership Proposal — Nedbank Green Affinity x The Bateleurs
+
+Dear Nedbank Green Affinity Team,
+
+The Bateleurs, South Africa's Environmental Air Force, aligns perfectly with Nedbank's commitment to green banking and environmental stewardship.
+
+Our 200+ volunteer pilots deliver aerial conservation support with a proven 4:1 multiplier effect — every R1 generates R4 in conservation value. This is the kind of measurable environmental impact that resonates with Nedbank Green Affinity clients.
+
+We propose a partnership where Nedbank clients can directly fund conservation flights through the Green Affinity Programme. Each flight is trackable, photographed, and reported — giving your clients a tangible connection to their environmental contribution.
+
+Warm regards,
+Steve McCurrach`,
+    proposalSummary: `PROPOSAL: "Fund a Flight" — Nedbank Green Affinity x Bateleurs
+
+CONCEPT: Nedbank Green Affinity clients fund specific conservation flights
+BUDGET: R200,000 annual programme
+IMPACT: 50+ funded missions, each reported back to contributing clients
+
+CLIENT ENGAGEMENT:
+• Named flight sponsorship ("Your flight protected 3 rhinos")
+• Aerial photography sent to contributing clients
+• Annual Green Affinity impact report inclusion`,
+    impactData: `GREEN BANKING ALIGNMENT:
+
+ENVIRONMENTAL CREDENTIALS:
+• 28 years of conservation aviation
+• R70M+ in conservation value
+• Section 18A compliant — tax deductible for clients
+• PBO registered (930009099)
+
+CROSS-REFERRAL NETWORK:
+• WWF SA (existing Nedbank partner)
+• Wilderness Foundation Africa (Nedbank-funded)
+• 150+ conservation organisations in beneficiary network`
+  },
+  {
+    id: 9, name: "TotalEnergies SA", type: "Corporate CSI", sector: ["Aviation & Fuel"],
+    matchScore: 83,
+    aiReasoning: "Aviation fuel supplier with active CSI obligations in South Africa. Natural 'Fuel a Conservation Flight' campaign partnership — every litre donated powers aerial conservation. Brand visibility across 200+ pilot aircraft represents significant below-the-line marketing value.",
+    fundingMin: 150000, fundingMax: 400000, geoFocus: "South Africa",
+    status: "new", deadline: null,
+    csiProgram: "TotalEnergies CSI Programme",
+    relevantCases: ["Gorongosa Wild Dogs", "Wattled Crane Recovery"],
+    pitchAngle: "Direct fuel-to-conservation partnership",
+    approach: "Similar to Sasol approach but differentiated — TotalEnergies has stronger international presence and African footprint. Emphasise cross-border missions (10 countries) aligning with their pan-African operations. Propose fuel voucher program at TotalEnergies-supplied airfields.",
+    alignment: { mission: 88, sector: 95, geo: 80, funding: 80, relationship: 35 },
+    emailPitch: `Subject: Aviation Fuel Partnership — Powering Conservation Across Africa
+
+Dear TotalEnergies SA CSI Team,
+
+The Bateleurs' volunteer pilots fly conservation missions across 10 African countries using aviation fuel from your network. We propose formalising this natural connection into a fuel sponsorship partnership.
+
+"Every litre powers conservation" — a compelling narrative for TotalEnergies' African sustainability commitments. Your fuel already enables rhino protection, wild dog relocations, and wetlands monitoring. A formal partnership simply makes this visible.
+
+Budget: R300,000 annual fuel sponsorship
+Coverage: 200+ aircraft, 10 countries, 1,000+ missions and counting
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `PROPOSAL: "Powering Conservation" — TotalEnergies Fuel Partnership
+
+CONCEPT: Aviation fuel sponsorship across 10 African countries
+BUDGET: R300,000/year in fuel vouchers
+REACH: 200+ aircraft, pan-African conservation operations`,
+    impactData: `AVIATION OPERATIONS:
+• 200+ volunteer pilots across southern Africa
+• Fixed-wing and ultralight aircraft fleet
+• Cross-border operations: SA, Mozambique, and 8 additional countries
+• Fuel is the primary operational cost (25% of total mission cost)`
+  },
+  {
+    id: 10, name: "Vodacom Group", type: "Corporate CSI", sector: ["Telecommunications"],
+    matchScore: 81,
+    aiReasoning: "Existing WWF SA corporate donor with strong connectivity-for-good CSI positioning. Technology partnership angle — real-time aerial data relay, mission coordination, and IoT wildlife monitoring integration. Vodacom's network enables your pilots to operate in remote areas.",
+    fundingMin: 100000, fundingMax: 250000, geoFocus: "South Africa",
+    status: "contacted", deadline: null,
+    csiProgram: "Vodacom Foundation / Change the World Programme",
+    relevantCases: ["Gorongosa Wild Dogs", "Anti-poaching"],
+    pitchAngle: "Connectivity powers conservation — tech partnership",
+    approach: "Position as technology partnership, not just donation. Vodacom's network enables pilot coordination and real-time data from the field. Propose joint innovation: IoT sensors on aircraft for automated environmental monitoring, connected via Vodacom's network. Use WWF relationship as warm introduction.",
+    alignment: { mission: 75, sector: 70, geo: 90, funding: 80, relationship: 65 },
+    emailPitch: `Subject: Technology for Conservation — Vodacom x The Bateleurs
+
+Dear Vodacom Foundation,
+
+Conservation happens in the most remote corners of South Africa — and it happens because Vodacom's network connects our 200+ volunteer pilots to the missions that matter.
+
+The Bateleurs proposes a technology partnership: Vodacom connectivity enabling real-time mission coordination, aerial data relay from remote reserves, and IoT wildlife monitoring from our aircraft.
+
+This isn't just a donation — it's innovation. "Connectivity Powers Conservation" positions Vodacom at the intersection of technology and environmental impact.
+
+R200,000 annual partnership for connected conservation.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `PROPOSAL: Connected Conservation — Vodacom x Bateleurs Tech Partnership
+
+CONCEPT: Technology-enabled conservation via Vodacom connectivity
+BUDGET: R200,000/year
+INNOVATION: Real-time mission data, IoT sensors, pilot coordination platform`,
+    impactData: `TECHNOLOGY REQUIREMENTS:
+• Mission coordination across 200+ pilots in remote areas
+• Real-time data relay from aerial surveys
+• IoT potential: airborne environmental sensors
+• Communication backbone for cross-border operations (10 countries)`
+  },
+  {
+    id: 11, name: "Endangered Wildlife Trust", type: "Foundation", sector: ["Conservation"],
+    matchScore: 80,
+    aiReasoning: "One of SA's premier conservation NGOs and existing Bateleurs beneficiary. EWT's three-pronged approach (species, habitats, people) maps directly to your mission types. Co-application for grants leveraging your aerial capability combined with their research expertise creates stronger proposals.",
+    fundingMin: 50000, fundingMax: 150000, geoFocus: "South Africa",
+    status: "in_discussion", deadline: null,
+    csiProgram: "EWT Partnership / Joint Grant Applications",
+    relevantCases: ["Wattled Crane Recovery", "Red Billed Oxpecker"],
+    pitchAngle: "Joint grant applications — aerial + research",
+    approach: "Pursue co-funding model: jointly apply for larger grants where EWT provides the research credibility and The Bateleurs provides the aerial capability. This makes both organisations more competitive. Start with a joint IUCN-SOS application.",
+    alignment: { mission: 95, sector: 95, geo: 90, funding: 60, relationship: 85 },
+    emailPitch: `Subject: Joint Grant Strategy — EWT x Bateleurs
+
+Dear EWT Team,
+
+Building on our longstanding partnership, we propose a formal joint grant application strategy. By combining EWT's research expertise with The Bateleurs' aerial capability, we can access larger funding pools — particularly IUCN-SOS, CEPF, and JRS Biodiversity Foundation grants that value multi-partner approaches.
+
+Let's discuss a joint application for the upcoming IUCN-SOS Threatened Species round.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `JOINT STRATEGY: EWT x Bateleurs Co-Funding Model
+
+CONCEPT: Joint grant applications combining research + aerial capability
+TARGET GRANTS: IUCN-SOS, CEPF, JRS Biodiversity Foundation
+COMBINED VALUE PROPOSITION: Stronger applications, larger grants, shared overhead`,
+    impactData: `EWT COLLABORATION:
+• Existing beneficiary relationship
+• Joint species monitoring programs
+• Wattled Crane and Red Billed Oxpecker success stories
+• Complementary capabilities: EWT ground research + Bateleurs aerial surveys`
+  },
+  {
+    id: 12, name: "JRS Biodiversity Foundation", type: "International Grant", sector: ["Conservation"],
+    matchScore: 79,
+    aiReasoning: "Awards grants to SANParks and EWT for biodiversity monitoring and data management. Your aerial survey data — habitat mapping, species counts, land-use monitoring — fits their bioinformatics focus. Technology-enabled conservation angle strengthens the application.",
+    fundingMin: 80000, fundingMax: 200000, geoFocus: "Global",
+    status: "new", deadline: null,
+    csiProgram: "JRS Biodiversity Foundation Grants",
+    relevantCases: ["Wetlands Research", "Wattled Crane Recovery"],
+    pitchAngle: "Aerial biodiversity data collection and management",
+    approach: "Frame your aerial surveys as a biodiversity data collection platform. JRS values data management and accessibility — propose a structured aerial data repository that feeds into national biodiversity databases. Partner with SANBI for credibility.",
+    alignment: { mission: 80, sector: 85, geo: 75, funding: 70, relationship: 40 },
+    emailPitch: `Subject: Grant Application — Aerial Biodiversity Data Collection Platform
+
+Dear JRS Biodiversity Foundation,
+
+The Bateleurs' 1,000+ aerial survey missions represent one of southern Africa's largest independent environmental observation datasets. We propose structuring this into a systematic aerial biodiversity data platform — with standardised collection protocols, digital archive, and integration with national biodiversity databases.
+
+Budget: R150,000 for platform development and 12-month data collection program.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `JRS GRANT: Aerial Biodiversity Data Platform
+AMOUNT: R150,000 (12 months)
+CONCEPT: Systematise 28 years of aerial observation data into accessible biodiversity database`,
+    impactData: `DATA ASSETS:
+• 28 years of aerial photography and survey data
+• Habitat mapping across 10 countries
+• Species count data from monitoring missions
+• Land-use change documentation (time-series)`
+  },
+  {
+    id: 13, name: "Peace Parks Foundation", type: "Foundation", sector: ["Conservation"],
+    matchScore: 78,
+    aiReasoning: "Your cross-border missions across 10 countries directly support their Transfrontier Conservation Area mandate. The Gorongosa wild dog relocation from SA to Mozambique is a flagship case study. Existing beneficiary relationship provides warm entry for funding discussions.",
+    fundingMin: 100000, fundingMax: 300000, geoFocus: "Southern Africa",
+    status: "contacted", deadline: null,
+    csiProgram: "Peace Parks Foundation — Transfrontier Conservation",
+    relevantCases: ["Gorongosa Wild Dogs", "Rewilding"],
+    pitchAngle: "Cross-border aerial logistics for transfrontier conservation",
+    approach: "Position as the aerial logistics backbone for transfrontier conservation — you're one of the few organisations that can fly wildlife across borders. The Gorongosa wild dog relocation proves this capability. Propose dedicated aerial support for Peace Parks' priority transfrontier corridors.",
+    alignment: { mission: 90, sector: 90, geo: 95, funding: 75, relationship: 70 },
+    emailPitch: `Subject: Aerial Logistics for Transfrontier Conservation
+
+Dear Peace Parks Foundation,
+
+The Bateleurs has demonstrated cross-border aerial conservation capability across 10 countries — most notably flying wild dogs from South Africa to Gorongosa, Mozambique, after 30 years of absence from the reserve.
+
+We propose a dedicated aerial support agreement for Peace Parks' Transfrontier Conservation Areas, providing wildlife transport, aerial survey, and monitoring services across borders.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `PROPOSAL: Transfrontier Aerial Support Agreement
+CONCEPT: Dedicated aerial capability for Peace Parks' cross-border conservation areas
+BUDGET: R200,000/year
+SCOPE: Wildlife transport, monitoring, survey across TFCA corridors`,
+    impactData: `CROSS-BORDER OPERATIONS:
+• 10 countries covered in southern Africa
+• Gorongosa wild dog relocation: SA to Mozambique (first in 30 years)
+• Lion rewilding transport operations
+• Cross-border wildlife crime investigation support`
+  },
+  {
+    id: 14, name: "Singita", type: "Private / Eco-Tourism", sector: ["Eco-Tourism"],
+    matchScore: 76,
+    aiReasoning: "Luxury eco-tourism operator with a 100-year conservation vision funded through sustainable tourism. Your aerial support for anti-poaching and wildlife monitoring in their reserves creates mutual value. Donor experience angle — exclusive conservation flight experiences for Singita guests.",
+    fundingMin: 50000, fundingMax: 150000, geoFocus: "Southern Africa",
+    status: "new", deadline: null,
+    csiProgram: "Singita Conservation Fund",
+    relevantCases: ["Anti-poaching", "Rewilding"],
+    pitchAngle: "Conservation flight experiences + aerial reserve monitoring",
+    approach: "Dual value proposition: (1) aerial monitoring and anti-poaching support for Singita reserves, and (2) exclusive conservation flight experiences for high-net-worth Singita guests as a fundraising event format. This creates both operational value and donor cultivation opportunities.",
+    alignment: { mission: 80, sector: 75, geo: 80, funding: 65, relationship: 45 },
+    emailPitch: `Subject: Aerial Conservation Partnership — Singita Reserves
+
+Dear Singita Conservation Fund,
+
+The Bateleurs proposes a dual partnership: aerial monitoring and anti-poaching support for Singita reserves, combined with exclusive conservation flight experiences for your guests.
+
+Imagine offering your visitors a dawn patrol over Singita's wilderness — seeing conservation from the air while directly funding it. This creates a premium guest experience and a new fundraising channel simultaneously.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `PROPOSAL: Singita x Bateleurs — Aerial Reserve Support + Guest Experiences
+BUDGET: R100,000/year
+DUAL VALUE: Operational reserve monitoring + premium guest flight experiences`,
+    impactData: `ECO-TOURISM VALUE:
+• Anti-poaching aerial surveillance for private reserves
+• Wildlife monitoring and population counts
+• Guest experience: conservation flights as premium tourism offering
+• Brand alignment: luxury conservation meets volunteer ethos`
+  },
+  {
+    id: 15, name: "Grootbos Foundation", type: "Private / Eco-Tourism", sector: ["Eco-Tourism"],
+    matchScore: 74,
+    aiReasoning: "Private nature reserve conserving the Cape Floral Kingdom — the world's smallest and most diverse plant kingdom. Your aerial surveys support their habitat monitoring and threat detection. Community development angle aligns with your broader conservation impact model.",
+    fundingMin: 30000, fundingMax: 100000, geoFocus: "South Africa",
+    status: "new", deadline: null,
+    csiProgram: "Grootbos Foundation Conservation Programme",
+    relevantCases: ["Wetlands Research", "Rewilding"],
+    pitchAngle: "Aerial monitoring of the Cape Floral Kingdom",
+    approach: "Offer regular aerial surveys of the Grootbos reserve and surrounding fynbos biome. Alien vegetation detection from the air is particularly valuable. Position as a cost-effective alternative to commercial aerial surveys — your volunteer model makes this affordable for a private reserve.",
+    alignment: { mission: 75, sector: 70, geo: 85, funding: 55, relationship: 35 },
+    emailPitch: `Subject: Aerial Fynbos Monitoring Partnership
+
+Dear Grootbos Foundation,
+
+The Cape Floral Kingdom's threats — alien vegetation, development, fire — are best detected from the air. The Bateleurs offers cost-effective aerial monitoring for Grootbos Reserve through our volunteer pilot network.
+
+Regular fly-overs can detect alien vegetation encroachment, development threats, and post-fire recovery across your fynbos conservation area at a fraction of commercial survey costs.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `PROPOSAL: Cape Floral Kingdom Aerial Monitoring
+BUDGET: R60,000/year
+SCOPE: Quarterly aerial surveys of Grootbos and surrounding fynbos`,
+    impactData: `FYNBOS MONITORING VALUE:
+• Alien vegetation detection from the air
+• Fire damage assessment and recovery monitoring
+• Development threat identification
+• Cape Floral Kingdom — world's most diverse plant kingdom per area`
+  },
+  {
+    id: 16, name: "Africa Hope Fund", type: "International Grant", sector: ["Conservation"],
+    matchScore: 72,
+    aiReasoning: "Promotes wildlife conservation in southern Africa with focus on anti-poaching, conservation education, and community development. Your anti-poaching aerial surveillance and cross-border wild dog relocations align with all three of their priority pillars.",
+    fundingMin: 50000, fundingMax: 150000, geoFocus: "Southern Africa",
+    status: "new", deadline: null,
+    csiProgram: "Africa Hope Fund Conservation Grants",
+    relevantCases: ["Gorongosa Wild Dogs", "Anti-poaching"],
+    pitchAngle: "Aerial anti-poaching and community conservation support",
+    approach: "Apply for their conservation grant program. Lead with anti-poaching aerial surveillance — this is the most compelling narrative for international donors. Include community impact: your missions enable eco-tourism which creates jobs in rural conservation areas.",
+    alignment: { mission: 80, sector: 75, geo: 80, funding: 60, relationship: 30 },
+    emailPitch: `Subject: Grant Application — Aerial Anti-Poaching and Conservation Support
+
+Dear Africa Hope Fund,
+
+The Bateleurs' volunteer pilots provide aerial surveillance supporting anti-poaching operations across southern Africa. Our aircraft have supported rhino dehorning, wildlife crime investigations, and cross-border species relocations.
+
+Beyond direct conservation, our missions enable eco-tourism that creates employment in rural communities — rewilding areas that haven't seen wildlife in 100+ years, creating new tourism economies.
+
+We request R100,000 for 12 months of aerial anti-poaching and conservation support operations.
+
+Steve McCurrach, General Manager`,
+    proposalSummary: `GRANT: Africa Hope Fund — Aerial Anti-Poaching Support
+AMOUNT: R100,000 (12 months)
+FOCUS: Anti-poaching surveillance, wildlife crime support, community conservation`,
+    impactData: `ANTI-POACHING IMPACT:
+• Rhino dehorning operation aerial support
+• Wildlife crime investigation surveillance
+• Cross-border species relocation (wild dogs to Gorongosa)
+• Community employment through conservation-enabled eco-tourism`
+  }
+];
+
+const INSIGHTS = [
+  { type: "urgent", tag: "Deadline", text: "Anglo American Biodiversity Grant deadline in 45 days — your Richards Bay mining impact case study is a strong fit. Match confidence: 94%." },
+  { type: "urgent", tag: "Deadline", text: "CEPF Maputaland-Pondoland-Albany Hotspot call closes in 30 days. Your coastal survey missions in this corridor make you an ideal applicant." },
+  { type: "timely", tag: "Seasonal", text: "ESG reporting season begins Q3 2026 — 12 JSE-listed corporates will be seeking conservation partnerships for annual reports. Start outreach now." },
+  { type: "timely", tag: "Window", text: "IUCN Save Our Species Rapid Action Grant window opens in 60 days. Your wattled crane recovery data qualifies for the Threatened Species track." },
+  { type: "opportunity", tag: "Sector", text: "3 aviation fuel companies (TotalEnergies, Sasol, Shell SA) have active CSI programs — natural brand alignment with your volunteer pilot model." },
+  { type: "opportunity", tag: "Network", text: "Nedbank Green Affinity channels client contributions to WWF SA — your existing WWF partnership creates a warm referral path to Nedbank." }
+];
+
+const PIPELINE_STAGES = [
+  { key: "identified", label: "Identified", count: 42 },
+  { key: "matched", label: "AI Matched", count: 16 },
+  { key: "contacted", label: "Contacted", count: 6 },
+  { key: "in_discussion", label: "In Discussion", count: 3 },
+  { key: "committed", label: "Committed", count: 1 }
+];
+
+const STATUS_LABELS = { new: "New", contacted: "Contacted", in_discussion: "In Discussion", committed: "Committed" };
+const STATUS_ORDER = { committed: 0, in_discussion: 1, contacted: 2, new: 3 };
+
+// ============ STATE ============
+let expandedCard = null;
+let openDropdown = null;
+
+// ============ RENDER ============
+function renderFunderCards() {
+  const grid = document.getElementById('funderGrid');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const scoreMin = parseInt(document.getElementById('scoreSlider').value);
+  const typeChecked = getCheckedValues('typeFilters');
+  const sectorChecked = getCheckedValues('sectorFilters');
+  const statusChecked = getCheckedValues('statusFilters');
+
+  let sortField = document.getElementById('sortSelect').value;
+  let sorted = [...FUNDERS].sort((a, b) => {
+    if (sortField === 'matchScore') return b.matchScore - a.matchScore;
+    if (sortField === 'fundingMax') return b.fundingMax - a.fundingMax;
+    if (sortField === 'status') return (STATUS_ORDER[a.status] || 9) - (STATUS_ORDER[b.status] || 9);
+    if (sortField === 'deadline') {
+      if (!a.deadline && !b.deadline) return b.matchScore - a.matchScore;
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    }
+    return 0;
+  });
+
+  let visible = 0;
+  let html = '';
+  sorted.forEach(f => {
+    let show = true;
+    if (search && !f.name.toLowerCase().includes(search) && !f.aiReasoning.toLowerCase().includes(search)) show = false;
+    if (f.matchScore < scoreMin) show = false;
+    if (typeChecked.length && !typeChecked.includes(f.type)) show = false;
+    if (sectorChecked.length && !f.sector.some(s => sectorChecked.includes(s))) show = false;
+    if (statusChecked.length && !statusChecked.includes(f.status)) show = false;
+    if (!show) return;
+    visible++;
+
+    const scoreClass = f.matchScore >= 85 ? 'high' : f.matchScore >= 60 ? 'mid' : 'low';
+    const typeClass = f.type === 'Corporate CSI' ? 'corporate' : f.type === 'Foundation' ? 'foundation' : f.type === 'Government' ? 'government' : f.type === 'International Grant' ? 'grant' : f.type === 'Private / Eco-Tourism' ? 'private' : 'multilateral';
+    const isExpanded = expandedCard === f.id;
+    const daysUntil = f.deadline ? Math.ceil((new Date(f.deadline) - new Date()) / 86400000) : null;
+
+    html += `<div class="funder-card${isExpanded ? ' card-expanded' : ''}" data-id="${f.id}">
+      <div class="card-top">
+        <div class="match-circle ${scoreClass}" style="--score:${f.matchScore}" data-score="${f.matchScore}%"></div>
+        <div class="card-info">
+          <h3>${f.name}</h3>
+          <div class="card-tags">
+            <span class="tag ${typeClass}">${f.type}</span>
+            ${f.sector.map(s => `<span class="tag" style="background:#F3F4F6;color:#374151">${s}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="card-reasoning">${f.aiReasoning}</div>
+      <div class="card-meta">
+        <div class="meta-item"><span class="meta-label">Funding: </span><span class="meta-value">R${(f.fundingMin/1000).toFixed(0)}K – R${(f.fundingMax/1000).toFixed(0)}K</span></div>
+        <div class="meta-item"><span class="meta-label">Focus: </span><span class="meta-value">${f.geoFocus}</span></div>
+        ${f.csiProgram ? `<div class="meta-item"><span class="meta-label">Programme: </span><span class="meta-value">${f.csiProgram}</span></div>` : ''}
+      </div>
+      ${daysUntil !== null ? `<div class="deadline-badge">&#9200; Deadline in ${daysUntil} days</div>` : ''}
+      <div class="card-bottom">
+        <div style="position:relative">
+          <div class="status-badge ${f.status}" onclick="toggleStatusDropdown(event, ${f.id})">
+            <span class="dot"></span>${STATUS_LABELS[f.status]}
+          </div>
+          <div class="status-dropdown" id="dropdown-${f.id}">
+            ${Object.entries(STATUS_LABELS).map(([k,v]) => `<div class="status-option" onclick="changeStatus(${f.id},'${k}')"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:${k==='new'?'var(--nth-blue)':k==='contacted'?'var(--amber)':k==='in_discussion'?'#EA580C':'var(--green)'}"></span>${v}</div>`).join('')}
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-outline" onclick="toggleExpand(${f.id})">
+            ${isExpanded ? 'Collapse' : 'View Profile'}
+          </button>
+          <button class="btn btn-primary" onclick="openPitchModal(${f.id})">Generate Pitch</button>
+        </div>
+      </div>
+      ${isExpanded ? renderExpandedDetails(f) : ''}
+    </div>`;
+  });
+  grid.innerHTML = html;
+  document.getElementById('resultCount').textContent = `(${visible} of ${FUNDERS.length} funders)`;
+  renderPipeline();
+}
+
+function renderExpandedDetails(f) {
+  const axes = [
+    { label: 'Mission Fit', value: f.alignment.mission },
+    { label: 'Sector Alignment', value: f.alignment.sector },
+    { label: 'Geographic Match', value: f.alignment.geo },
+    { label: 'Funding Capacity', value: f.alignment.funding },
+    { label: 'Relationship Warmth', value: f.alignment.relationship }
+  ];
+  return `<div class="expanded-details">
+    <h4 style="font-size:13px;font-weight:700;color:var(--nth-indigo);margin-bottom:12px">Alignment Breakdown</h4>
+    <div class="alignment-bars">
+      ${axes.map(a => `<div class="align-row">
+        <span class="align-label">${a.label}</span>
+        <div class="align-bar-bg"><div class="align-bar-fill ${a.value >= 80 ? 'high' : 'mid'}" style="width:${a.value}%"></div></div>
+        <span class="align-value">${a.value}%</span>
+      </div>`).join('')}
+    </div>
+    <div class="suggested-approach">
+      <h4>Suggested Approach</h4>
+      <p>${f.approach}</p>
+    </div>
+    <div class="relevant-cases">
+      <h4>Relevant Case Studies</h4>
+      ${f.relevantCases.map(c => `<span class="case-tag">${c}</span>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderPipeline() {
+  const statusCounts = { new: 0, contacted: 0, in_discussion: 0, committed: 0 };
+  FUNDERS.forEach(f => statusCounts[f.status]++);
+
+  const stages = [
+    { label: "Identified", count: 42, cls: "stage-0" },
+    { label: "AI Matched", count: FUNDERS.length, cls: "stage-1" },
+    { label: "Contacted", count: statusCounts.contacted + statusCounts.in_discussion + statusCounts.committed, cls: "stage-2" },
+    { label: "In Discussion", count: statusCounts.in_discussion + statusCounts.committed, cls: "stage-3" },
+    { label: "Committed", count: statusCounts.committed, cls: "stage-4" }
+  ];
+
+  const maxCount = stages[0].count;
+  let html = '';
+  stages.forEach(s => {
+    const pct = Math.max((s.count / maxCount) * 100, 8);
+    html += `<div class="funnel-row">
+      <span class="funnel-label">${s.label}</span>
+      <span class="funnel-count">${s.count}</span>
+      <div class="funnel-bar-bg"><div class="funnel-bar-fill ${s.cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+  document.getElementById('pipelineFunnel').innerHTML = html;
+
+  const totalMin = FUNDERS.reduce((s,f) => s + f.fundingMin, 0);
+  const totalMax = FUNDERS.reduce((s,f) => s + f.fundingMax, 0);
+  const avgScore = Math.round(FUNDERS.reduce((s,f) => s + f.matchScore, 0) / FUNDERS.length);
+  const nextDeadline = FUNDERS.filter(f => f.deadline).sort((a,b) => new Date(a.deadline) - new Date(b.deadline))[0];
+  const daysNext = nextDeadline ? Math.ceil((new Date(nextDeadline.deadline) - new Date()) / 86400000) : null;
+
+  document.getElementById('pipelineMetrics').innerHTML = `
+    <div class="pipeline-metric"><span class="pm-label">Pipeline Value: </span><span class="pm-value">R${(totalMin/1000000).toFixed(1)}M – R${(totalMax/1000000).toFixed(1)}M</span></div>
+    <div class="pipeline-metric"><span class="pm-label">Avg Match Score: </span><span class="pm-value">${avgScore}%</span></div>
+    ${nextDeadline ? `<div class="pipeline-metric"><span class="pm-label">Next Deadline: </span><span class="pm-value">${nextDeadline.name} — ${daysNext} days</span></div>` : ''}
+    <div class="pipeline-metric"><span class="pm-label">Committed: </span><span class="pm-value">${statusCounts.committed} funder(s)</span></div>
+  `;
+}
+
+function renderInsights() {
+  const container = document.getElementById('insightsContainer');
+  container.innerHTML = INSIGHTS.map(i => `
+    <div class="insight-card ${i.type}">
+      <div class="insight-tag">${i.tag}</div>
+      ${i.text}
+    </div>
+  `).join('');
+}
+
+// ============ INTERACTIONS ============
+function getCheckedValues(containerId) {
+  return [...document.querySelectorAll(`#${containerId} input:checked`)].map(c => c.value);
+}
+
+function updateScoreLabel() {
+  document.getElementById('scoreLabel').textContent = document.getElementById('scoreSlider').value + '%';
+}
+
+function applyFilters() { renderFunderCards(); }
+function applySort() { renderFunderCards(); }
+
+function resetFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('scoreSlider').value = 50;
+  updateScoreLabel();
+  document.querySelectorAll('aside input[type="checkbox"]').forEach(c => c.checked = false);
+  renderFunderCards();
+}
+
+function toggleExpand(id) {
+  expandedCard = expandedCard === id ? null : id;
+  renderFunderCards();
+}
+
+function toggleStatusDropdown(event, id) {
+  event.stopPropagation();
+  if (openDropdown && openDropdown !== id) {
+    document.getElementById(`dropdown-${openDropdown}`)?.classList.remove('open');
+  }
+  const dd = document.getElementById(`dropdown-${id}`);
+  dd.classList.toggle('open');
+  openDropdown = dd.classList.contains('open') ? id : null;
+}
+
+function changeStatus(id, newStatus) {
+  const funder = FUNDERS.find(f => f.id === id);
+  if (funder) funder.status = newStatus;
+  openDropdown = null;
+  renderFunderCards();
+}
+
+document.addEventListener('click', () => {
+  if (openDropdown) {
+    document.getElementById(`dropdown-${openDropdown}`)?.classList.remove('open');
+    openDropdown = null;
+  }
+});
+
+// ============ MODAL ============
+let currentModalFunder = null;
+
+function openPitchModal(id) {
+  currentModalFunder = FUNDERS.find(f => f.id === id);
+  if (!currentModalFunder) return;
+
+  document.getElementById('modalSubtitle').textContent = `Tailored for ${currentModalFunder.name} based on ${currentModalFunder.matchScore}% alignment analysis`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Reset tabs
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.modal-tab[data-tab="email"]').classList.add('active');
+  document.querySelectorAll('.modal-tab-content').forEach(t => { t.classList.remove('active'); t.innerHTML = ''; });
+
+  // Show generating animation then content
+  const emailTab = document.getElementById('tab-email');
+  emailTab.classList.add('active');
+  emailTab.innerHTML = `<div class="generating">Generating personalised pitch<div class="generating-dots"><span></span><span></span><span></span></div></div>`;
+
+  setTimeout(() => {
+    emailTab.innerHTML = `<div class="pitch-content">${escapeHtml(currentModalFunder.emailPitch)}</div>`;
+    document.getElementById('tab-proposal').innerHTML = `<div class="pitch-content">${escapeHtml(currentModalFunder.proposalSummary)}</div>`;
+    document.getElementById('tab-impact').innerHTML = `<div class="pitch-content">${escapeHtml(currentModalFunder.impactData)}</div>`;
+  }, 1500);
+
+  // Reset copy button
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = 'Copy to Clipboard';
+  btn.classList.remove('copied');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentModalFunder = null;
+}
+
+function closeModalOutside(event) {
+  if (event.target === event.currentTarget) closeModal();
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+  document.querySelectorAll('.modal-tab-content').forEach(t => t.classList.toggle('active', t.id === `tab-${tabName}`));
+}
+
+function copyPitch() {
+  const activeTab = document.querySelector('.modal-tab-content.active .pitch-content');
+  if (activeTab) {
+    navigator.clipboard.writeText(activeTab.textContent).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy to Clipboard'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+// ============ NAV ============
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('sidebar-open');
+}
+
+// Escape key closes modal
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', () => {
+  renderFunderCards();
+  renderInsights();
+});
+</script>
+</body>
+</html>

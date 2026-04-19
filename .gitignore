@@ -1,0 +1,7 @@
+.DS_Store
+.claude/
+
+# Large binary docs — keep local, don't track in Git.
+# If one is meant to be a site asset, move it under public/ and force-add with `git add -f`.
+*.pdf
+*.docx
